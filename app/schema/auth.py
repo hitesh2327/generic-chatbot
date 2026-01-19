@@ -7,6 +7,7 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    refresh_token: str
 
 class RegisterRequest(BaseModel):
     username: str = Field(min_length=3, max_length=50)

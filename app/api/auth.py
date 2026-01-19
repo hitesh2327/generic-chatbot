@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.core.rate_limiter import rate_limit
 from app.schema.auth import LoginRequest, TokenResponse, RegisterRequest
 from app.services.user_service import authenticate_user, get_user_by_username, create_user
-from app.core.security import create_access_token
+from app.core.security import create_access_token, create_refresh_token
 from app.core.dependencies import get_db
 
 router = APIRouter(tags=["Auth"])
@@ -24,8 +24,8 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": user.username})
-
-    return TokenResponse(access_token=token)
+    refreshToken=create_refresh_token({"sub": user.username})
+    return TokenResponse(access_token=token, refresh_token=refreshToken)
 
 
 
@@ -45,5 +45,6 @@ def register(data: RegisterRequest, db: Session = Depends(get_db)):
 
     token = create_access_token({"sub": user.username})
 
-    return TokenResponse(access_token=token)
+    refreshToken=create_refresh_token({"sub": user.username})
+    return TokenResponse(access_token=token, refresh_token=refreshToken)
 
